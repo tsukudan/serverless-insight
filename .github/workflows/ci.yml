@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # Frontend
+      - name: Install frontend dependencies
+        working-directory: aws-observability-dashboard/app/frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: aws-observability-dashboard/app/frontend
+        run: npm run build
+
+      # Backend
+      - name: Install backend dependencies
+        working-directory: aws-observability-dashboard/app/backend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: aws-observability-dashboard/app/backend
+        run: npm test
+
+      # Infrastructure
+      - name: Install infra dependencies
+        working-directory: aws-observability-dashboard/infra
+        run: npm ci
+
+      - name: CDK synth (dry-run)
+        working-directory: aws-observability-dashboard/infra
+        run: npx cdk synth
