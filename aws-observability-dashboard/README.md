@@ -8,9 +8,9 @@ A serverless observability dashboard for AWS applications, built as part of the 
 aws-observability-dashboard/
 ├── README.md          # This file
 ├── app/
-│   ├── frontend/      # Dashboard UI (React / TypeScript)
-│   └── backend/       # Serverless API (AWS Lambda / TypeScript)
-└── infra/             # Infrastructure as Code (AWS CDK / TypeScript)
+│   ├── frontend/      # Dashboard UI (Next.js / TypeScript)
+│   └── backend/       # Serverless API (AWS Lambda / Python)
+└── infra/             # Infrastructure as Code (Terraform)
 ```
 
 ## Getting Started
@@ -18,8 +18,9 @@ aws-observability-dashboard/
 ### Prerequisites
 
 - Node.js >= 18
+- Python >= 3.12
 - AWS CLI configured with appropriate credentials
-- AWS CDK CLI: `npm install -g aws-cdk`
+- Terraform CLI
 
 ### Setup
 
@@ -35,27 +36,31 @@ aws-observability-dashboard/
 
    ```bash
    cd app/backend
-   npm install
-   npm test
+   pip install -r requirements.txt
+   pytest
    ```
 
 3. **Infrastructure**
 
    ```bash
    cd infra
-   npm install
-   npx cdk bootstrap   # First time only
-   npx cdk deploy
+   terraform init
+   terraform plan
+   terraform apply
    ```
 
 ## Architecture Overview
 
-| Layer        | Technology                            |
-|--------------|---------------------------------------|
-| Frontend     | React, TypeScript, AWS Amplify        |
-| Backend      | AWS Lambda, API Gateway, DynamoDB     |
-| Observability| CloudWatch, X-Ray, CloudTrail         |
-| IaC          | AWS CDK (TypeScript)                  |
+| Layer        | Technology                                  |
+|--------------|---------------------------------------------|
+| Frontend     | Next.js (Static Export), TypeScript, Tailwind CSS |
+| Backend      | AWS Lambda (Python), API Gateway            |
+| Data Source   | CloudWatch Metrics, CloudWatch Logs         |
+| Database     | DynamoDB (Demo App)                         |
+| Hosting      | CloudFront + S3                             |
+| IaC          | Terraform                                   |
+| CI/CD        | GitHub Actions                              |
+| Region       | ap-northeast-1 (Tokyo)                      |
 
 ## Contributing
 
